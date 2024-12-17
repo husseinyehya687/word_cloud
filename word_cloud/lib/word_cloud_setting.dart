@@ -114,18 +114,17 @@ class WordCloudSetting {
     // }
 
     for (var i = 0; i < data.length; i++) {
-      double denominator = data[0]['value'] - data[data.length - 1]['value'];
+      double getTextSize =
+          (minTextSize * (data[0]['value'] - data[i]['value']) +
+              maxTextSize *
+                  (data[i]['value'] - data[data.length - 1]['value'])) /
+              (data[0]['value'] - data[data.length - 1]['value']);
 
-      double getTextSize;
-      if (denominator != 0) {
-        getTextSize = (minTextSize * (data[0]['value'] - data[i]['value']) +
-                maxTextSize *
-                    (data[i]['value'] - data[data.length - 1]['value'])) /
-            denominator;
-      } else {
-        getTextSize = (minTextSize + maxTextSize) / 2;
+
+      if(getTextSize.toString() == 'NaN'){
+        getTextSize = minTextSize;
       }
-
+    
       final textSpan = TextSpan(
         text: data[i]['word'],
         style: TextStyle(
@@ -166,7 +165,11 @@ class WordCloudSetting {
                   maxTextSize *
                       (data[i]['value'] - data[data.length - 1]['value'])) /
               (data[0]['value'] - data[data.length - 1]['value']);
-
+      if(getTextSize.toString() == 'NaN'){
+        getTextSize = minTextSize;
+      }
+    
+      
       final textSpan = TextSpan(
         text: data[i]['word'],
         style: TextStyle(
@@ -219,7 +222,7 @@ class WordCloudSetting {
       return false;
     }
     for (int i = x.toInt(); i < x.toInt() + w; i++) {
-      if (map[i][y + h.toInt() - 1] == 1) {
+      if (map[i][(y + h.toInt() - 1).toInt()] == 1) {
         return false;
       }
       if (map[i][y + 1] == 1) {
